@@ -4,7 +4,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="Enums\" />
     <Folder Include="Exceptions\" />
@@ -12,13 +11,10 @@
     <Folder Include="Events\" />
     <Folder Include="ValueObjects\" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.10.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Ambev.DeveloperEvaluation.Common\Ambev.DeveloperEvaluation.Common.csproj" />
   </ItemGroup>
-
 </Project>
