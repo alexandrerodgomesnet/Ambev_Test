@@ -21,6 +21,9 @@ public class Sale : BaseEntity
         Products = [];
     }
 
+    public void Cancelled() => Status = SaleStatus.Canceled;
+    public void NotCancelled() => Status = SaleStatus.Active;
+
     public ValidationResultDetail Validate()
     {
         var validator = new SaleValidator();
