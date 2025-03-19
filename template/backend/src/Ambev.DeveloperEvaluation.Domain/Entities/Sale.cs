@@ -9,13 +9,10 @@ public class Sale : BaseEntity
 {
     public int NumberSale { get; set; }
     public DateTime CreatedAt { get; set; }
-    public Customer? Customer { get; set; }
+    public string Customer { get; set; } = string.Empty;
     public decimal TotalSaleValue { get; set; }
-    public Branch? BranchForSale { get; set; }
-    public IEnumerable<Product> Products { get; set; }
-    public decimal Discount { get; set; }
-    public decimal TotalItemValue { get; set; }
-    public int Quantity { get; set; }
+    public string BranchForSale { get; set; } = string.Empty;
+    public IEnumerable<ItemSale> Products { get; set; }
     public SaleStatus Status { get; set; }
 
     public Sale()
