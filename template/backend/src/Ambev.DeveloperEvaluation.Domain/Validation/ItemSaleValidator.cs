@@ -13,13 +13,11 @@ public class ItemSaleValidator : AbstractValidator<ItemSale>
             .MaximumLength(50).WithMessage("Title sale cannot be longer than 50 characters.");
 
         RuleFor(item => item.Quantity)
-            .NotEmpty()
-            .LessThanOrEqualTo(0)
-            .WithMessage("Quantity of items cannot be less than or equal to zero.");
+            .NotEqual(0)
+            .WithMessage("Quantity of items cannot be equal to zero.");
 
         RuleFor(sale => sale.UnitPrice)
-            .NotEmpty()
-            .LessThanOrEqualTo(0)
-            .WithMessage("Unit price cannot be less than or equal to zero");
+            .NotEqual(0)
+            .WithMessage("Unit price cannot be equal to zero");
     }
 }
