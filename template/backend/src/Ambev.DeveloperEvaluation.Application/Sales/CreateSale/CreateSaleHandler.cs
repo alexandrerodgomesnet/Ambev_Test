@@ -36,6 +36,8 @@ public class CreateSaleHandler : ICommandHandler<CreateSaleCommand, CreateSaleRe
     /// <returns>The created user details</returns>
     public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
     {
+        command.MakeDiscount();
+        
         var validator = new CreateSaleCommandValidator();
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
 
