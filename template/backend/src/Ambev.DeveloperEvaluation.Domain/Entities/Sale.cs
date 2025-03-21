@@ -12,13 +12,14 @@ public class Sale : BaseEntity
     public string Customer { get; set; } = string.Empty;
     public decimal TotalSaleValue { get; set; }
     public string BranchForSale { get; set; } = string.Empty;
-    public IEnumerable<ItemSale> Products { get; set; }
+    public List<ItemSale> Products { get; set; }
     public SaleStatus Status { get; set; }
 
     public Sale()
     {
         CreatedAt = DateTime.UtcNow;
         Products = [];
+        Status = SaleStatus.Unknown;
     }
 
     public void Cancelled() => Status = SaleStatus.Canceled;
