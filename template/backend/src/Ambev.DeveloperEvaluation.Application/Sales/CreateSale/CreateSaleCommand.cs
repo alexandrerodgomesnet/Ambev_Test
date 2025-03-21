@@ -1,3 +1,5 @@
+using Ambev.DeveloperEvaluation.Application.Abstractions.Messaging;
+using Ambev.DeveloperEvaluation.Application.Sales.Rules;
 using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Enums;
@@ -13,18 +15,18 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 /// including NumberSale, CreatedAt, Customer, TotalSaleValue, BranchForSale, Products and Status. 
 /// It implements <see cref="IRequest{TResponse}"/> to initiate the request 
 /// that returns a <see cref="CreateSaleResult"/>.
-/// 
 /// The data provided in this command is validated using the 
 /// <see cref="CreateSaleCommandValidator"/> which extends 
 /// <see cref="AbstractValidator{T}"/> to ensure that the fields are correctly 
 /// populated and follow the required rules.
 /// </remarks>
-public class CreateSaleCommand : IRequest<CreateSaleResult>
+public class CreateSaleCommand : ICommand<CreateSaleResult>
 {
-    /// <summary>
-    /// Gets or sets the NumberSale of the sale to be created.
-    /// </summary>
-    public int NumberSale { get; set; }
+    public CreateSaleCommand()
+    {
+        Status = SaleStatus.Active;
+        CreatedAt = DateTime.UtcNow;
+    }
 
     /// <summary>
     /// Gets or sets the CreatedAt for the sale.
@@ -50,13 +52,22 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     /// Gets or sets the Products for the sale.
     /// </summary>
 
-    public IEnumerable<ItemSale> Products { get; set; } = [];
+    public List<ItemSale> Products { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the Status for the sale.
     /// </summary>
     public SaleStatus Status { get; set; }
 
+    public void MakeDiscount()
+    {
+        foreach (var product in Products)
+        {
+            var calculateDiscount = new CalculateDiscount();
+            product.SetTotalItemValue(calculateDiscount.Calculate(product) ?? 0);
+        }
+        TotalSaleValue = Products.Sum(x => x.TotalItemValue);
+    }
 
     public ValidationResultDetail Validate()
     {
