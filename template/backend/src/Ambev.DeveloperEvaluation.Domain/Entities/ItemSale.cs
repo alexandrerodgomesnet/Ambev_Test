@@ -9,7 +9,9 @@ public class ItemSale
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal Discount { get; private set; }
-    public decimal TotalItemValue => UnitPrice * Quantity;
+    public decimal TotalItemValue { get; private set; }
+
+    public void SetDiscount(decimal discount) => Discount = discount / 100;
 
     public ValidationResultDetail Validate()
     {
@@ -21,4 +23,6 @@ public class ItemSale
             Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
         };
     }
+
+    public void SetTotalItemValue(decimal value) => TotalItemValue = value;
 }
