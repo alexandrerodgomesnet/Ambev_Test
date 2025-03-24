@@ -12,7 +12,7 @@ public class Sale : BaseEntity
     public string Customer { get; set; } = string.Empty;
     public decimal TotalSaleValue { get; set; }
     public string BranchForSale { get; set; } = string.Empty;
-    public List<ItemSale> Products { get; set; }
+    public ICollection<ItemSale> Products { get; set; }
     public SaleStatus Status { get; set; }
 
     public Sale()
