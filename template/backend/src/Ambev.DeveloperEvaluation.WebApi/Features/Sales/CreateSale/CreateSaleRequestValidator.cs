@@ -21,26 +21,29 @@ public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
     public CreateSaleRequestValidator()
     {
         RuleFor(sale => sale.Customer)
+            .NotEmpty().WithMessage("Customer is required.")
             .MinimumLength(3).WithMessage("Customer must be at least 3 characters long.")
             .MaximumLength(50).WithMessage("Customer cannot be longer than 50 characters.");
 
         RuleFor(sale => sale.BranchForSale)
+            .NotEmpty().WithMessage("BranchForSale is required.")
             .MinimumLength(3).WithMessage("BranchForSale must be at least 3 characters long.")
             .MaximumLength(50).WithMessage("BranchForSale cannot be longer than 50 characters.");
 
         RuleForEach(x => x.Products)
             .ChildRules(itemSale => {
-
+                
                 itemSale.RuleFor(item => item.Title)
                     .NotEmpty()
-                    .WithMessage("Title sale cannot be empty.")
+                    .WithMessage("Title is required.")
                     .MinimumLength(3)
                     .WithMessage("Title sale must be at least 3 characters long.")
                     .MaximumLength(50)
                     .WithMessage("Title sale cannot be longer than 50 characters.");
 
                 itemSale.RuleFor(item => item.Quantity)
-                    .InclusiveBetween(1, 20)
+                    .Must(QuantityGreaterThanOrEqualTo1AndLessThanOrEqualTo20)
+                    //.InclusiveBetween(1, 20)
                     .WithMessage("The quantity must be between 1 and 20 items.");
 
                 itemSale.RuleFor(sale => sale.UnitPrice)
@@ -48,4 +51,7 @@ public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
                     .WithMessage("Unit price cannot be equal to zero");
         });
     }
+
+    public static bool QuantityGreaterThanOrEqualTo1AndLessThanOrEqualTo20(int quantity) =>
+        quantity >= 1 && quantity <= 20;
 }
