@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  ambevtest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      #- ../..:/app:cached
+      - ./..:/app:cached
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:database    
+    # Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    # user: root
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  database:
+    container_name: ambev_developer_evaluation_database
+    image: postgres:13
+
+    environment:
+      POSTGRES_DB: developer_evaluation
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: ev@luAt10n
+    ports:
+      - "5432"
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    #"DefaultConnection": "Server=localhost;Database=DeveloperEvaluation;User Id=sa;Password=Pass@word;TrustServerCertificate=True"
+      
+    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  nosql:
+    container_name: ambev_developer_evaluation_nosql 
+    image: mongo:8.0    
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: developer
+        MONGO_INITDB_ROOT_PASSWORD: ev@luAt10n
+    ports:
+      - "27017"
+
+  cache:
+    container_name: ambev_developer_evaluation_cache 
+    image: redis:7.4.1-alpine     
+    command: redis-server --requirepass ev@luAt10n
+    environment:
+       MONGO_INITDB_ROOT_USERNAME: developer
+       MONGO_INITDB_ROOT_PASSWORD: ev@luAt10n
+    ports:
+       - "6379"
+
+volumes:
+  postgres-data:
