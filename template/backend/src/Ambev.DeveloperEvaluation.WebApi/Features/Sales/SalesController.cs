@@ -6,6 +6,9 @@ using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.CreateSale.Sales;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Common.Validation;
+using FluentValidation;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.Request;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
@@ -18,16 +21,23 @@ public class SalesController : BaseController
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IValidator<CreateSaleRequest> _validatorCreate;
+    private readonly IValidator<GetSaleRequest> _validatorGet;
 
     /// <summary>
     /// Initializes a new instance of SalesController
     /// </summary>
     /// <param name="mediator">The mediator instance</param>
     /// <param name="mapper">The AutoMapper instance</param>
-    public SalesController(IMediator mediator, IMapper mapper)
+    public SalesController(IMediator mediator, IMapper mapper
+    , IValidator<CreateSaleRequest> validatorCreate
+    , IValidator<GetSaleRequest> validatorGet
+        )
     {
         _mediator = mediator;
         _mapper = mapper;
+        _validatorCreate = validatorCreate;
+        _validatorGet = validatorGet;
     }
 
     /// <summary>
@@ -41,12 +51,13 @@ public class SalesController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateSale([FromBody] CreateSaleRequest request, CancellationToken cancellationToken)
     {
-        var validationResult = request.Validate();
+        var validationResult = await _validatorCreate.ValidateAsync(request);
 
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors.Select(o => (ValidationErrorDetail)o));
 
-        var command = _mapper.Map<CreateSaleCommand>(request);        
+        var command = _mapper.Map<CreateSaleCommand>(request); 
+        command.MakeDiscount();       
         var response = await _mediator.Send(command, cancellationToken);
 
         return Created(string.Empty, new ApiResponseWithData<CreateSaleResponse>
