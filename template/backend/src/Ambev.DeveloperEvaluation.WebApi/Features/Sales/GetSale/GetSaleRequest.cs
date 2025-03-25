@@ -1,6 +1,6 @@
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.Request;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
 /// <summary>
 /// Request model for getting a sale by ID

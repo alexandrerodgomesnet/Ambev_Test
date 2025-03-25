@@ -1,6 +1,6 @@
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.Response;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
 /// <summary>
 /// API response model for GetSale operation
