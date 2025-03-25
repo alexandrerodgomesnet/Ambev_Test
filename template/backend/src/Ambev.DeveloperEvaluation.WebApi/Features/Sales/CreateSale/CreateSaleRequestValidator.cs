@@ -43,7 +43,6 @@ public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
 
                 itemSale.RuleFor(item => item.Quantity)
                     .Must(QuantityGreaterThanOrEqualTo1AndLessThanOrEqualTo20)
-                    //.InclusiveBetween(1, 20)
                     .WithMessage("The quantity must be between 1 and 20 items.");
 
                 itemSale.RuleFor(sale => sale.UnitPrice)
