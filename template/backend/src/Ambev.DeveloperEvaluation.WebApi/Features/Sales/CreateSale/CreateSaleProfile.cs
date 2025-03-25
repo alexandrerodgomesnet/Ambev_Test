@@ -1,6 +1,5 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.WebApi.Features.CreateSale.Sales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.Response;
 using AutoMapper;
 
@@ -28,6 +27,7 @@ public class CreateSaleProfile : Profile
                         UnitPrice = p.UnitPrice
                     }).ToList()
                 });
+
         CreateMap<CreateSaleResult, CreateSaleResponse>()
             .ConvertUsing(source => new CreateSaleResponse()
                 {
