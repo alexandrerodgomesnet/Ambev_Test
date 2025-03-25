@@ -1,3 +1,5 @@
+using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.Response;
 using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
@@ -12,7 +14,27 @@ public class GetSaleProfile : Profile
     /// </summary>
     public GetSaleProfile()
     {
-        CreateMap<Guid, Application.Users.GetUser.GetUserCommand>()
-            .ConstructUsing(id => new Application.Users.GetUser.GetUserCommand(id));
+        CreateMap<Guid, GetSaleCommand>()
+            .ConstructUsing(id => new GetSaleCommand(id));
+
+        CreateMap<GetSaleResult, GetSaleResponse>()
+            .ConvertUsing(source => new GetSaleResponse()
+                {
+                    Id = source.Id,
+                    Customer = source.Customer,
+                    BranchForSale = source.BranchForSale,
+                    Products = source.Products.Select(p => new ItemSaleResponse
+                    {
+                        Id = p.Id,
+                        Title = p.Title,
+                        Quantity = p.Quantity,
+                        UnitPrice = p.UnitPrice,
+                        Discount = p.Discount,
+                        TotalItemValue = p.TotalItemValue
+                    }).ToList(),
+                    Status = source.Status,
+                    TotalSaleValue = source.TotalSaleValue
+                }
+            );
     }
 }
