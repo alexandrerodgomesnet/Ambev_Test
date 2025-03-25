@@ -34,5 +34,9 @@ public class ItemSaleConfiguration: IEntityTypeConfiguration<ItemSale>
         builder.Property(s => s.TotalItemValue)
             .HasColumnType("decimal")
             .IsRequired();
+
+        builder.Property(s => s.Status)
+            .HasConversion<string>()
+            .HasMaxLength(20);
     }
 }
