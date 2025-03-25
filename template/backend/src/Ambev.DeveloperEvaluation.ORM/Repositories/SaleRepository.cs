@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,7 +43,8 @@ public class SaleRepository : ISaleRepository
     public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _context.Sales
             .Include(x => x.Products)
-            .FirstOrDefaultAsync(o=> o.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(s => s.Id == id 
+                && s.Status == SaleStatus.Active, cancellationToken);
 
     /// <summary>
     /// Retrieves a sale by their numberSale
@@ -53,7 +55,8 @@ public class SaleRepository : ISaleRepository
     public async Task<Sale?> GetByNumberSaleAsync(int numberSale, CancellationToken cancellationToken = default)
         => await _context.Sales
             .Include(x => x.Products)
-            .FirstOrDefaultAsync(u => u.NumberSale == numberSale, cancellationToken);
+            .FirstOrDefaultAsync(s => s.NumberSale == numberSale 
+                && s.Status == SaleStatus.Active, cancellationToken);
 
     /// <summary>
     /// Retrieves a sale by their numberSale
@@ -64,7 +67,8 @@ public class SaleRepository : ISaleRepository
     public async Task<Sale?> GetByCustomerAsync(string customer, CancellationToken cancellationToken = default)
         => await _context.Sales
             .Include(x => x.Products)
-            .FirstOrDefaultAsync(u => u.Customer.Equals(customer, StringComparison.CurrentCultureIgnoreCase), cancellationToken);
+            .FirstOrDefaultAsync(s => s.Customer.Equals(customer, StringComparison.CurrentCultureIgnoreCase)
+                && s.Status == SaleStatus.Active, cancellationToken);
 
     /// <summary>
     /// Deletes a sale from the database
