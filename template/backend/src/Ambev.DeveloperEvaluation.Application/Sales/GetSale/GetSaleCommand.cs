@@ -1,6 +1,6 @@
 using Ambev.DeveloperEvaluation.Application.Abstractions.Messaging;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 /// <summary>
 /// Command for retrieving a sale by their ID

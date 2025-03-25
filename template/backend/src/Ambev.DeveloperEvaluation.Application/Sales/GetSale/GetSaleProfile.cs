@@ -2,7 +2,7 @@ using AutoMapper;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Application.Sales.Result;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 /// <summary>
 /// Profile for mapping between Sale entity and GetSaleResponse

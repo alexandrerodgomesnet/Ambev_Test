@@ -1,6 +1,6 @@
 using Ambev.DeveloperEvaluation.Application.Sales.Result;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 /// <summary>
 /// Response model for GetSale operation

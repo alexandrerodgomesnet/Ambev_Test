@@ -1,10 +1,9 @@
 using AutoMapper;
-using MediatR;
 using FluentValidation;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Abstractions.Messaging;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 /// <summary>
 /// Handler for processing GetUserCommand requests
