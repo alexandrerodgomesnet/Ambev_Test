@@ -1,6 +1,6 @@
 using Ambev.DeveloperEvaluation.Application.Abstractions.Messaging;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 /// <summary>
 /// Command for deleting a sale
