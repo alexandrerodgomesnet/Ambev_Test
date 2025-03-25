@@ -32,6 +32,7 @@ public class CreateSaleProfile : Profile
                     }).ToList(),
                     Status = source.Status,
                     TotalSaleValue = source.TotalSaleValue
-                });
+                }
+            );
     }
 }

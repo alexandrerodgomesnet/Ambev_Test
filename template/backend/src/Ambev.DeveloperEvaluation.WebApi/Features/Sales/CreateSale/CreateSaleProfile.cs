@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.WebApi.Features.CreateSale.Sales;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.Response;
 using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
@@ -27,6 +28,24 @@ public class CreateSaleProfile : Profile
                         UnitPrice = p.UnitPrice
                     }).ToList()
                 });
-        CreateMap<CreateSaleResult, CreateSaleResponse>();
+        CreateMap<CreateSaleResult, CreateSaleResponse>()
+            .ConvertUsing(source => new CreateSaleResponse()
+                {
+                    Id = source.Id,
+                    Customer = source.Customer,
+                    BranchForSale = source.BranchForSale,
+                    Products = source.Products.Select(p => new ItemSaleResponse
+                    {
+                        Id = p.Id,
+                        Title = p.Title,
+                        Quantity = p.Quantity,
+                        UnitPrice = p.UnitPrice,
+                        Discount = p.Discount,
+                        TotalItemValue = p.TotalItemValue
+                    }).ToList(),
+                    Status = source.Status,
+                    TotalSaleValue = source.TotalSaleValue
+                }
+            );
     }
 }
