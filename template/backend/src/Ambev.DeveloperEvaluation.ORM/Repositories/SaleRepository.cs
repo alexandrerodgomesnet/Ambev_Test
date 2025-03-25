@@ -40,7 +40,9 @@ public class SaleRepository : ISaleRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale if found, null otherwise</returns>
     public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    => await _context.Sales.FirstOrDefaultAsync(o=> o.Id == id, cancellationToken);
+        => await _context.Sales
+            .Include(x => x.Products)
+            .FirstOrDefaultAsync(o=> o.Id == id, cancellationToken);
 
     /// <summary>
     /// Retrieves a sale by their numberSale
@@ -49,8 +51,9 @@ public class SaleRepository : ISaleRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale if found, null otherwise</returns>
     public async Task<Sale?> GetByNumberSaleAsync(int numberSale, CancellationToken cancellationToken = default)
-    => await _context.Sales
-        .FirstOrDefaultAsync(u => u.NumberSale == numberSale, cancellationToken);
+        => await _context.Sales
+            .Include(x => x.Products)
+            .FirstOrDefaultAsync(u => u.NumberSale == numberSale, cancellationToken);
 
     /// <summary>
     /// Retrieves a sale by their numberSale
@@ -59,8 +62,9 @@ public class SaleRepository : ISaleRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale if found, null otherwise</returns>
     public async Task<Sale?> GetByCustomerAsync(string customer, CancellationToken cancellationToken = default)
-    => await _context.Sales
-        .FirstOrDefaultAsync(u => u.Customer.Equals(customer, StringComparison.CurrentCultureIgnoreCase), cancellationToken);
+        => await _context.Sales
+            .Include(x => x.Products)
+            .FirstOrDefaultAsync(u => u.Customer.Equals(customer, StringComparison.CurrentCultureIgnoreCase), cancellationToken);
 
     /// <summary>
     /// Deletes a sale from the database
