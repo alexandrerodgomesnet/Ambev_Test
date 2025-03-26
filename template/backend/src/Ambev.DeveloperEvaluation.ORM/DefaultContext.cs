@@ -10,9 +10,12 @@ public class DefaultContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Sale> Sales { get; set; }
+    public DbSet<ItemSale> ItemSales { get; set; }
 
     public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
     {
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        ChangeTracker.AutoDetectChangesEnabled = false;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
