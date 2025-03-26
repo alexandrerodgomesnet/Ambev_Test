@@ -40,6 +40,8 @@ public class Program
 
             builder.RegisterDependencies();
 
+            builder.Services.AddCommonService(builder.Configuration);
+
             builder.Services.AddFromAssembliesValidators();
 
             builder.Services.AddAutoMapperFromAssemblies();

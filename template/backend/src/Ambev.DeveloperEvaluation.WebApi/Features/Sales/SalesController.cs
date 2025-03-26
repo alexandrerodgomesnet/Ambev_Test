@@ -5,6 +5,7 @@ using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.Application.Sales;
 using Ambev.DeveloperEvaluation.Common.Validation;
 using FluentValidation;
+using Ambev.DeveloperEvaluation.Common.Messaging;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
@@ -21,6 +22,7 @@ public class SalesController : BaseController
     private readonly IValidator<UpdateSaleRequest> _validatorUpdate;
     private readonly IValidator<GetSaleRequest> _validatorGet;
     private readonly IValidator<DeleteSaleRequest> _validatorDelete;
+    private readonly IMessageProducer _publisher;
 
     /// <summary>
     /// Initializes a new instance of SalesController
@@ -31,7 +33,8 @@ public class SalesController : BaseController
         , IValidator<CreateSaleRequest> validatorCreate
         , IValidator<UpdateSaleRequest> validatorUpdate
         , IValidator<GetSaleRequest> validatorGet
-        , IValidator<DeleteSaleRequest> validatorDelete)
+        , IValidator<DeleteSaleRequest> validatorDelete
+        , IMessageProducer publisher)
     {
         _mediator = mediator;
         _mapper = mapper;
@@ -39,7 +42,10 @@ public class SalesController : BaseController
         _validatorUpdate = validatorUpdate;
         _validatorGet = validatorGet;
         _validatorDelete = validatorDelete;
+        _publisher = publisher;
     }
+
+    const string _routingKey = "sales";
 
     /// <summary>
     /// Creates a new sale
@@ -60,6 +66,8 @@ public class SalesController : BaseController
         var command = _mapper.Map<CreateSaleCommand>(request); 
         command.MakeDiscount();       
         var response = await _mediator.Send(command, cancellationToken);
+
+        await _publisher.SendMessageAsync(response, _routingKey);
 
         return Created(string.Empty, new ApiResponseWithData<CreateSaleResponse>
         {
@@ -92,6 +100,8 @@ public class SalesController : BaseController
         command.MakeDiscount(); 
         var response = await _mediator.Send(command, cancellationToken);
 
+        await _publisher.SendMessageAsync(response, _routingKey);
+
         return Ok(new ApiResponseWithData<UpdateSaleResponse>
         {
             Success = true,
@@ -120,6 +130,8 @@ public class SalesController : BaseController
 
         var command = _mapper.Map<GetSaleQuery>(request.Id);
         var response = await _mediator.Send(command, cancellationToken);
+
+        await _publisher.SendMessageAsync(response, _routingKey);
 
         return Ok(new ApiResponseWithData<GetSaleResponse>
         {
@@ -150,10 +162,14 @@ public class SalesController : BaseController
         var command = _mapper.Map<DeleteSaleCommand>(request.Id);
         await _mediator.Send(command, cancellationToken);
 
-        return Ok(new ApiResponse
+        var apiResponse = new ApiResponse
         {
             Success = true,
             Message = "Sale deleted successfully"
-        });
+        };
+
+        await _publisher.SendMessageAsync(apiResponse, _routingKey);
+
+        return Ok(apiResponse);
     }
 }

@@ -1,9 +1,10 @@
 using Ambev.DeveloperEvaluation.Application;
+using Ambev.DeveloperEvaluation.Domain.Services;
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Extensions;
 
-public static class AssembliesExtensions
+public static class StartupExtension
 {
     public static IServiceCollection AddFromAssembliesValidators(this IServiceCollection services) =>
         services.AddValidatorsFromAssemblies([
@@ -25,4 +26,10 @@ public static class AssembliesExtensions
                 typeof(Program).Assembly
             );
         });
+
+
+    public static void AddCommonService(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<RabbitMqConfiguration>(a => configuration.GetSection(nameof(RabbitMqConfiguration)).Bind(a));
+    }
 }
