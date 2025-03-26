@@ -3,14 +3,14 @@ using FluentValidation;
 namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 /// <summary>
-/// Validator for GetUserCommand
+/// Validator for GetSaleQuery
 /// </summary>
-public class GetSaleCommandValidator : AbstractValidator<GetSaleCommand>
+public class GetSaleQueryValidator : AbstractValidator<GetSaleQuery>
 {
     /// <summary>
-    /// Initializes validation rules for GetUserCommand
+    /// Initializes validation rules for GetSaleQuery
     /// </summary>
-    public GetSaleCommandValidator()
+    public GetSaleQueryValidator()
     {
         RuleFor(x => x.Id)
             .NotEmpty()

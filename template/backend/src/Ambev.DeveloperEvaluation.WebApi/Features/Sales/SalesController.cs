@@ -85,7 +85,7 @@ public class SalesController : BaseController
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<GetSaleCommand>(request.Id);
+        var command = _mapper.Map<GetSaleQuery>(request.Id);
         var response = await _mediator.Send(command, cancellationToken);
 
         return Ok(new ApiResponseWithData<GetSaleResponse>

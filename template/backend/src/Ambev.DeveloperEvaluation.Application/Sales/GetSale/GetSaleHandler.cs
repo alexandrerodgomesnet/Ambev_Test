@@ -6,24 +6,24 @@ using Ambev.DeveloperEvaluation.Application.Abstractions.Messaging;
 namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 /// <summary>
-/// Handler for processing GetUserCommand requests
+/// Handler for processing GetSaleQuery requests
 /// </summary>
-public class GetSaleHandler : ICommandHandler<GetSaleCommand, GetSaleResult>
+public class GetSaleHandler : ICommandHandler<GetSaleQuery, GetSaleResult>
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
-    private readonly IValidator<GetSaleCommand> _validator;
+    private readonly IValidator<GetSaleQuery> _validator;
 
     /// <summary>
     /// Initializes a new instance of GetSaleHandler
     /// </summary>
     /// <param name="saleRepository">The sale repository</param>
     /// <param name="mapper">The AutoMapper instance</param>
-    /// <param name="validator">The validator for GetSaleCommand</param>
+    /// <param name="validator">The validator for GetSaleQuery</param>
     public GetSaleHandler(
         ISaleRepository saleRepository,
         IMapper mapper,
-        IValidator<GetSaleCommand> validator)
+        IValidator<GetSaleQuery> validator)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
@@ -31,12 +31,12 @@ public class GetSaleHandler : ICommandHandler<GetSaleCommand, GetSaleResult>
     }
 
     /// <summary>
-    /// Handles the GetUserCommand request
+    /// Handles the GetSaleQuery request
     /// </summary>
-    /// <param name="request">The GetSale command</param>
+    /// <param name="request">The GetSale query</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale details if found</returns>
-    public async Task<GetSaleResult> Handle(GetSaleCommand request, CancellationToken cancellationToken)
+    public async Task<GetSaleResult> Handle(GetSaleQuery request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
