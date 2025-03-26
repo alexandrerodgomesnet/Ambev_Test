@@ -24,19 +24,25 @@ public class ItemSaleConfiguration: IEntityTypeConfiguration<ItemSale>
             .IsRequired();
 
         builder.Property(s => s.UnitPrice)
-            .HasColumnType("decimal")
-            .IsRequired();
+            .IsRequired()
+            .HasColumnType("decimal(18,2)");
 
         builder.Property(s => s.Discount)
-            .HasColumnType("decimal")
-            .IsRequired();
+            .IsRequired()
+            .HasColumnType("decimal(18,2)");
 
         builder.Property(s => s.TotalItemValue)
-            .HasColumnType("decimal")
-            .IsRequired();
+            .IsRequired()
+            .HasColumnType("decimal(18,2)");
 
         builder.Property(s => s.Status)
+            .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(20);
+
+        builder.HasOne(i => i.Sale)
+            .WithMany(s => s.Products)
+            .HasForeignKey(i => i.SaleId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

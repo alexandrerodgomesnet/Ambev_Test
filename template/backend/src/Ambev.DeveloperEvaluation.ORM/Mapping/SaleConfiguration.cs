@@ -17,12 +17,23 @@ public class SaleConfiguration: IEntityTypeConfiguration<Sale>
 
         builder.Property(s => s.NumberSale)
             .ValueGeneratedOnAdd();
+
         builder.Property(s => s.CreatedAt)
-            .IsRequired();
+            .IsRequired()
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.Property(s => s.UpdatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+            .ValueGeneratedOnUpdate();
+
         builder.Property(s => s.Customer)
-            .IsRequired().HasMaxLength(50);
+            .IsRequired()
+            .HasMaxLength(50);
+
         builder.Property(s => s.TotalSaleValue)
-            .IsRequired();
+            .IsRequired()
+            .HasColumnType("decimal(18,2)");
+            
         builder.Property(s => s.BranchForSale)
             .IsRequired()
             .HasMaxLength(50);
@@ -34,6 +45,7 @@ public class SaleConfiguration: IEntityTypeConfiguration<Sale>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(s => s.Status)
+            .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(20);
     }
