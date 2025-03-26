@@ -35,6 +35,42 @@ public class SaleRepository : ISaleRepository
     }
 
     /// <summary>
+    /// Updated a sale in the database
+    /// </summary>
+    /// <param name="sale">The sale to updated</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The updated sale</returns>
+    public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default)
+    {
+        var existingSale = await _context.Sales
+            .AsNoTracking()
+            .Include(s => s.Products)
+            .FirstOrDefaultAsync(s => s.Id == sale.Id, cancellationToken)
+            ?? throw new InvalidOperationException($"Sale with id {sale.Id} does not exist.");
+
+        _context.Sales.Attach(sale);
+        await UpdateItemSales(sale.Products, existingSale.Products);
+        _context.Entry(sale).State = EntityState.Modified;
+        await _context.SaveChangesAsync(cancellationToken);
+        return existingSale;
+    }
+
+    private async Task UpdateItemSales(List<ItemSale> newProducts, List<ItemSale> productsDb)
+    {
+        foreach (var productDb in productsDb)
+        {
+            var newProduct = newProducts.FirstOrDefault(p => p.Id == productDb.Id);
+
+            if(newProduct != null)
+            {
+                _context.ItemSales.Attach(newProduct!);
+                _context.Entry(newProduct).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+
+    /// <summary>
     /// Retrieves a sale by their unique identifier
     /// </summary>
     /// <param name="id">The unique identifier of the sale</param>
@@ -43,8 +79,7 @@ public class SaleRepository : ISaleRepository
     public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _context.Sales
             .Include(x => x.Products)
-            .FirstOrDefaultAsync(s => s.Id == id 
-                && s.Status == SaleStatus.Active, cancellationToken);
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
     /// <summary>
     /// Retrieves a sale by their numberSale
