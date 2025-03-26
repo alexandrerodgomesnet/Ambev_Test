@@ -16,7 +16,7 @@ public class SaleConfiguration: IEntityTypeConfiguration<Sale>
             .HasDefaultValueSql("gen_random_uuid()");
 
         builder.Property(s => s.NumberSale)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAddOrUpdate();
 
         builder.Property(s => s.CreatedAt)
             .IsRequired()

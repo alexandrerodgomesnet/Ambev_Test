@@ -52,7 +52,7 @@ public class SaleRepository : ISaleRepository
         await UpdateItemSales(sale.Products, existingSale.Products);
         _context.Entry(sale).State = EntityState.Modified;
         await _context.SaveChangesAsync(cancellationToken);
-        return existingSale;
+        return sale;
     }
 
     private async Task UpdateItemSales(List<ItemSale> newProducts, List<ItemSale> productsDb)

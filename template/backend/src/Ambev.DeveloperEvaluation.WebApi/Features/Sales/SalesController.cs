@@ -18,6 +18,7 @@ public class SalesController : BaseController
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly IValidator<CreateSaleRequest> _validatorCreate;
+    private readonly IValidator<UpdateSaleRequest> _validatorUpdate;
     private readonly IValidator<GetSaleRequest> _validatorGet;
     private readonly IValidator<DeleteSaleRequest> _validatorDelete;
 
@@ -27,14 +28,15 @@ public class SalesController : BaseController
     /// <param name="mediator">The mediator instance</param>
     /// <param name="mapper">The AutoMapper instance</param>
     public SalesController(IMediator mediator, IMapper mapper
-    , IValidator<CreateSaleRequest> validatorCreate
-    , IValidator<GetSaleRequest> validatorGet
-    , IValidator<DeleteSaleRequest> validatorDelete
-        )
+        , IValidator<CreateSaleRequest> validatorCreate
+        , IValidator<UpdateSaleRequest> validatorUpdate
+        , IValidator<GetSaleRequest> validatorGet
+        , IValidator<DeleteSaleRequest> validatorDelete)
     {
         _mediator = mediator;
         _mapper = mapper;
         _validatorCreate = validatorCreate;
+        _validatorUpdate = validatorUpdate;
         _validatorGet = validatorGet;
         _validatorDelete = validatorDelete;
     }
@@ -64,6 +66,37 @@ public class SalesController : BaseController
             Success = true,
             Message = "Sale created successfully",
             Data = _mapper.Map<CreateSaleResponse>(response)
+        });
+    }
+
+    /// <summary>
+    /// Updates an existing sale
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to update</param>
+    /// <param name="request">The sale update request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The updated sale details</returns>
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponseWithData<UpdateSaleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateSale([FromRoute] Guid id, [FromBody] UpdateSaleRequest request, CancellationToken cancellationToken)
+    {
+        request.Id = id;
+        var validationResult = await _validatorUpdate.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors.Select(o => (ValidationErrorDetail)o));
+
+        var command = _mapper.Map<UpdateSaleCommand>(request);
+        command.MakeDiscount(); 
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return Ok(new ApiResponseWithData<UpdateSaleResponse>
+        {
+            Success = true,
+            Message = "Sale updated successfully",
+            Data = _mapper.Map<UpdateSaleResponse>(response)
         });
     }
 
