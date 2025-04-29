@@ -46,7 +46,7 @@ public class Program
 
             builder.Services.AddAutoMapperFromAssemblies();
 
-            builder.Services.AddMediatRFromAssemblies();
+            builder.Services.AddMediatRAndServices();
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 

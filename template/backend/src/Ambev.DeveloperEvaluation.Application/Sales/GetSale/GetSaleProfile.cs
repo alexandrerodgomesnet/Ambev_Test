@@ -1,37 +1,14 @@
 using AutoMapper;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Application.Sales.Result;
+using Ambev.DeveloperEvaluation.Application.Common.Extensions;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales;
-
-/// <summary>
-/// Profile for mapping between Sale entity and GetSaleResponse
-/// </summary>
 public class GetSaleProfile : Profile
 {
-    /// <summary>
-    /// Initializes the mappings for GetSale operation
-    /// </summary>
     public GetSaleProfile()
     {
         CreateMap<Sale, GetSaleResult>()
-        .ConvertUsing(source => new GetSaleResult()
-                {
-                    Id = source.Id,
-                    Customer = source.Customer,
-                    BranchForSale = source.BranchForSale,
-                    Products = source.Products.Select(p => new ItemSaleResult
-                    {
-                        Id = p.Id,
-                        Title = p.Title,
-                        Quantity = p.Quantity,
-                        UnitPrice = p.UnitPrice,
-                        Discount = p.Discount,
-                        TotalItemValue = p.TotalItemValue
-                    }).ToList(),
-                    Status = source.Status,
-                    TotalSaleValue = source.TotalSaleValue
-                }
-            );
+        //.ConvertUsing(source => source.ConvertGetSaleResult());
+        .ConvertUsing(source => source.ConvertGetSaleResult());
     }
 }

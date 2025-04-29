@@ -1,8 +1,5 @@
-using Ambev.DeveloperEvaluation.Domain.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Enums;
-using Ambev.DeveloperEvaluation.Common.Validation;
-
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
 public class Sale : BaseEntity
@@ -25,15 +22,4 @@ public class Sale : BaseEntity
 
     public void Cancelled() => Status = SaleStatus.Canceled;
     public void NotCancelled() => Status = SaleStatus.Active;
-
-    public ValidationResultDetail Validate()
-    {
-        var validator = new SaleValidator();
-        var result = validator.Validate(this);
-        return new ValidationResultDetail
-        {
-            IsValid = result.IsValid,
-            Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
-        };
-    }
 }

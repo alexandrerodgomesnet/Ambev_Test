@@ -1,23 +1,9 @@
-using Ambev.DeveloperEvaluation.Domain.Validation;
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
-/// <summary>
-/// Validator for CreateSaleRequest that defines validation rules for sale creation.
-/// </summary>
-public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
+public class CreateSaleRequestValidator : AbstractValidator<CreateSaleResponse>
 {
-    /// <summary>
-    /// Initializes a new instance of the CreateUserRequestValidator with defined validation rules.
-    /// </summary>
-    /// <remarks>
-    /// Validation rules include:
-    /// - Customer: Required, length between 3 and 50 characters
-    /// - TotalSaleValue: Cannot be None 0
-    /// - BranchForSale: Required, length between 3 and 50 characters
-    /// - Products: Cannot be Empty
-    /// </remarks>
     public CreateSaleRequestValidator()
     {
         RuleFor(sale => sale.Customer)

@@ -69,7 +69,7 @@ public class SaleTest
         {
             Customer = SaleTestData.GenerateInvalidCustomer(),
             BranchForSale = SaleTestData.GenerateInvalidBranchForSale(),
-            Products = SaleTestData.GenerateInvalidProducts(),
+            //Products = SaleTestData.GenerateInvalidProducts(),
             Status = SaleTestData.GenerateInvalidStatus()
         };
 

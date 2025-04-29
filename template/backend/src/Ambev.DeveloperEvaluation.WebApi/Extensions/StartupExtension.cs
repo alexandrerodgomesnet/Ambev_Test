@@ -1,6 +1,9 @@
+using System.Reflection;
 using Ambev.DeveloperEvaluation.Application;
 using Ambev.DeveloperEvaluation.Domain.Services;
+using Ambev.DeveloperEvaluation.WebApi.Common.Behaviors;
 using FluentValidation;
+using MediatR;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Extensions;
 
@@ -18,7 +21,8 @@ public static class StartupExtension
             typeof(ApplicationLayer).Assembly
         );
 
-    public static IServiceCollection AddMediatRFromAssemblies(this IServiceCollection services) =>
+    public static IServiceCollection AddMediatRAndServices(this IServiceCollection services)
+    {
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(
@@ -26,6 +30,19 @@ public static class StartupExtension
                 typeof(Program).Assembly
             );
         });
+
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        var assemblies = new List<Assembly>
+        {
+            typeof(ApplicationLayer).Assembly,
+            typeof(Program).Assembly
+        };
+        services.AddValidatorsFromAssemblies(assemblies);
+
+        return services;
+    }
+        
 
 
     public static void AddCommonService(this IServiceCollection services, IConfiguration configuration)

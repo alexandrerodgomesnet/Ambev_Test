@@ -1,65 +1,27 @@
 using Ambev.DeveloperEvaluation.Application.Abstractions.Messaging;
-using Ambev.DeveloperEvaluation.Application.Sales.Rules;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Enums;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales;
 
 public class UpdateSaleCommand: ICommand<UpdateSaleResult>
 {
-    public UpdateSaleCommand()
-    {
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public UpdateSaleCommand(Guid id, string customer, string branchForSale, 
-        List<ItemSale> products) : this()
+    private UpdateSaleCommand(Guid id, string customer, string branchForSale, ProductList products)
     {
         Id = id;
         Customer = customer;
         BranchForSale = branchForSale;
         Products = products;
+        TotalSaleValue = products.MakeDiscount();
+        UpdatedAt = DateTime.UtcNow;
     }
 
-    /// <summary>
-    /// The unique identifier of the sale to retrieve
-    /// </summary>
-    public Guid Id { get; set; }
+    public static UpdateSaleCommand Create(Guid id, string customer, string branchForSale, ProductList products) =>
+        new(id, customer, branchForSale, products);
 
-    /// <summary>
-    /// Gets or sets the UpdatedAt for the sale.
-    /// </summary>
-    public DateTime UpdatedAt { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Customer for the sale.
-    /// </summary>
-    public string Customer { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the TotalSaleValue for the sale.
-    /// </summary>
-    public decimal TotalSaleValue { get; set; }
-
-    /// <summary>
-    /// Gets or sets the BranchForSale for the sale.
-    /// </summary>
-    public string BranchForSale { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the Products for the sale.
-    /// </summary>
-
-    public List<ItemSale> Products { get; set; } = [];
-
-
-    public void MakeDiscount()
-    {
-        foreach (var product in Products)
-        {
-            var calculateDiscount = new CalculateDiscount();
-            product.SetTotalItemValue(calculateDiscount.Calculate(product) ?? 0);
-        }
-        TotalSaleValue = Products.Sum(x => x.TotalItemValue);
-    }
+    public Guid Id { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
+    public string Customer { get; private set; } = string.Empty;
+    public decimal TotalSaleValue { get; private set; }
+    public string BranchForSale { get; private set; } = string.Empty;
+    public ProductList Products { get; private set; } = [];
 }

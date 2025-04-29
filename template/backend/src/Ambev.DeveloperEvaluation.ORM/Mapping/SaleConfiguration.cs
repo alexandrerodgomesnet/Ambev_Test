@@ -15,8 +15,10 @@ public class SaleConfiguration: IEntityTypeConfiguration<Sale>
             .HasColumnType("uuid")
             .HasDefaultValueSql("gen_random_uuid()");
 
-        builder.Property(s => s.NumberSale)
-            .ValueGeneratedOnAddOrUpdate();
+        builder.Property(s => s.NumberSale)  
+            .IsRequired()
+            //.HasComputedColumnSql("[NumberSale] + [1]")
+            .ValueGeneratedOnAdd();
 
         builder.Property(s => s.CreatedAt)
             .IsRequired()

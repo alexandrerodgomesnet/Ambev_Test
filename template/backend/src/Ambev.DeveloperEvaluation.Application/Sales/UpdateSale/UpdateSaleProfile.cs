@@ -1,4 +1,4 @@
-using Ambev.DeveloperEvaluation.Application.Sales.Result;
+using Ambev.DeveloperEvaluation.Application.Common.Extensions;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using AutoMapper;
 
@@ -10,23 +10,6 @@ public class UpdateSaleProfile : Profile
     {
         CreateMap<UpdateSaleCommand, Sale>();
         CreateMap<Sale, UpdateSaleResult>()
-            .ConvertUsing(source => new UpdateSaleResult()
-                {
-                    Id = source.Id,
-                    Customer = source.Customer,
-                    BranchForSale = source.BranchForSale,
-                    Products = source.Products.Select(p => new ItemSaleResult
-                    {
-                        Id = p.Id,
-                        Title = p.Title,
-                        Quantity = p.Quantity,
-                        UnitPrice = p.UnitPrice,
-                        Discount = p.Discount,
-                        TotalItemValue = p.TotalItemValue
-                    }).ToList(),
-                    Status = source.Status,
-                    TotalSaleValue = source.TotalSaleValue
-                }
-            );
+        .ConvertUsing(source => source.ConvertUpdateSaleResult());
     }
 }

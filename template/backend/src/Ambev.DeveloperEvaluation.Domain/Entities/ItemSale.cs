@@ -5,10 +5,22 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
 public class ItemSale : BaseEntity
 {
-    public ItemSale()
+    private ItemSale()
     {
         Status = ItemSaleStatus.Active;
     }
+
+    public ItemSale(string title, int quantity, decimal unitPrice) : this()
+    {
+        Title = title;
+        Quantity = quantity;
+        UnitPrice = unitPrice;
+    }
+    public ItemSale(Guid id, string title, int quantity, decimal unitPrice) : this(title, quantity, quantity)
+    {
+        Id = id;
+    }
+
 
     public string Title { get; set; } = string.Empty;
     public int Quantity { get; set; }
@@ -19,6 +31,11 @@ public class ItemSale : BaseEntity
 
     public Guid SaleId { get; set; }
     public Sale? Sale { get; set; }
+
+    public static ItemSale Create(string title, int quantity, decimal unitPrice) =>
+        new(title, quantity, unitPrice);
+    public static ItemSale Create(Guid id, string title, int quantity, decimal unitPrice) =>
+        new(id, title, quantity, unitPrice);
 
     public void SetDiscount(decimal discount) => Discount = discount / 100;
     public void SetTotalItemValue(decimal value) => TotalItemValue = value;
