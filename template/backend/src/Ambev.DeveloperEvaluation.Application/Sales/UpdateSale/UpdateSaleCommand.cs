@@ -3,7 +3,7 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales;
 
-public class UpdateSaleCommand: ICommand<UpdateSaleResult>
+public class UpdateSaleCommand: ICommandResult<UpdateSaleResult>
 {
     private UpdateSaleCommand(Guid id, string customer, string branchForSale, ProductList products)
     {

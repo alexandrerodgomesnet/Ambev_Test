@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.Application.Sales;
-using Ambev.DeveloperEvaluation.Common.Validation;
-using FluentValidation;
 using Ambev.DeveloperEvaluation.Common.Results;
 using Ambev.DeveloperEvaluation.Common.Results.Extensions;
 
@@ -16,20 +14,10 @@ public class SalesController : BaseController
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
-    private readonly IValidator<UpdateSaleRequest> _validatorUpdate;
-    private readonly IValidator<GetSaleRequest> _validatorGet;
-    private readonly IValidator<DeleteSaleRequest> _validatorDelete;
-    public SalesController(IMediator mediator, IMapper mapper
-        , IValidator<UpdateSaleRequest> validatorUpdate
-        , IValidator<GetSaleRequest> validatorGet
-        , IValidator<DeleteSaleRequest> validatorDelete
-        )
+    public SalesController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
         _mapper = mapper;
-        _validatorUpdate = validatorUpdate;
-        _validatorGet = validatorGet;
-        _validatorDelete = validatorDelete;
     }
 
     [HttpPost]
@@ -40,54 +28,25 @@ public class SalesController : BaseController
             .Map(_mapper.Map<CreateSaleCommand>)
             .TapAsync(cmd => _mediator.Send(cmd, cancellationToken))
             .Map(_mapper.Map<CreateSaleResponse>)
-            .Match<CreateSaleResponse, IActionResult>(
-                onSuccess: CreateSuccessSale,
-                onFailure: FailureSale
+            .Match(
+                onSuccess: r => Created(r, "Sale created successfully"),
+                onFailure: Failure
             );
-
-    private CreatedResult CreateSuccessSale(CreateSaleResponse response) =>
-        Created(string.Empty, new ApiResponseWithData<CreateSaleResponse>
-        {
-            Success = true,
-            Message = "Sale created successfully",
-            Data = _mapper.Map<CreateSaleResponse>(response)
-        });
-
-    private BadRequestObjectResult FailureSale(Error[] errors) =>
-        BadRequest(new ValidationResultDetail
-        {
-            IsValid = false,
-            Errors = errors.Select(o => new ValidationErrorDetail()
-            {
-                Error = o.Code,
-                Detail = o.Description
-            })
-        });
 
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ApiResponseWithData<UpdateSaleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateSale([FromRoute] Guid id, [FromBody] UpdateSaleRequest request, CancellationToken cancellationToken)
-    {
-        request.Id = id;
-        //var validationResult = await _validatorUpdate.ValidateAsync(request, cancellationToken);
-
-        //if (!validationResult.IsValid)
-        //    return BadRequest(validationResult.Errors.Select(o => (ValidationErrorDetail)o));
-
-        var command = _mapper.Map<UpdateSaleCommand>(request);
-        var response = await _mediator.Send(command, cancellationToken);
-
-        //await _publisher.SendMessageAsync(response, _routingKey);
-
-        return Ok(new ApiResponseWithData<UpdateSaleResponse>
-        {
-            Success = true,
-            Message = "Sale updated successfully",
-            Data = _mapper.Map<UpdateSaleResponse>(response)
-        });
-    }
+        => await Result.Create(request)
+            .Tap(r => { r.Id = id; return r; })
+            .Map(_mapper.Map<UpdateSaleCommand>)
+            .TapAsync(cmd => _mediator.Send(cmd, cancellationToken))
+            .Map(_mapper.Map<UpdateSaleResponse>)
+            .Match(
+                onSuccess: r => Ok(r, "Sale updated successfully"),
+                onFailure: Failure
+            );
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResponse>), StatusCodes.Status200OK)]
