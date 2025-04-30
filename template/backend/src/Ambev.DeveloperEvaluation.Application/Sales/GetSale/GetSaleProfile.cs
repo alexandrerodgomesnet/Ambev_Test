@@ -8,7 +8,6 @@ public class GetSaleProfile : Profile
     public GetSaleProfile()
     {
         CreateMap<Sale, GetSaleResult>()
-        //.ConvertUsing(source => source.ConvertGetSaleResult());
         .ConvertUsing(source => source.ConvertGetSaleResult());
     }
 }

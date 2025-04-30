@@ -1,24 +1,8 @@
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales;
-
-/// <summary>
-/// Validator for CreateSaleCommand that defines validation rules for user creation command.
-/// </summary>
 public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
 {
-    /// <summary>
-    /// Initializes a new instance of the CreateSaleCommandValidator with defined validation rules.
-    /// </summary>
-    /// <remarks>
-    /// Validation rules include:
-    /// - CreatedAt: Required
-    /// - Customer: Required, length between 3 and 50 characters
-    /// - TotalSaleValue: Cannot be 0
-    /// - BranchForSale: Required, length between 3 and 50 characters
-    /// - Products: Required
-    /// - Status: Cannot be set to Unknown
-    /// </remarks>
     public CreateSaleCommandValidator()
     {
         RuleFor(sale => sale.CreatedAt).NotEmpty();
@@ -31,6 +15,8 @@ public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
             .MaximumLength(50).WithMessage("BranchForSale cannot be longer than 50 characters.");
 
         RuleForEach(x => x.Products)
+            .NotEmpty()
+            .WithMessage("Products list cannot be empty.")
             .ChildRules(itemSale => {
 
                 itemSale.RuleFor(item => item.Title)

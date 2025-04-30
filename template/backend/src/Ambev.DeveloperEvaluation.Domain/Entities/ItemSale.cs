@@ -5,16 +5,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
 public class ItemSale : BaseEntity
 {
-    private ItemSale()
-    {
-        Status = ItemSaleStatus.Active;
-    }
-
-    public ItemSale(string title, int quantity, decimal unitPrice) : this()
+    public ItemSale(string title, int quantity, decimal unitPrice)
     {
         Title = title;
         Quantity = quantity;
         UnitPrice = unitPrice;
+        Status = ItemSaleStatus.Active;
     }
     public ItemSale(Guid id, string title, int quantity, decimal unitPrice) : this(title, quantity, quantity)
     {

@@ -1,5 +1,3 @@
-using Ambev.DeveloperEvaluation.Application.Sales.Results;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.Response;
 
@@ -14,4 +12,5 @@ public class CreateSaleResponse : SaleResponse
     internal static CreateSaleResponse Create(Guid id, string customer, string branchForSale, int numberSale,
         IEnumerable<ItemSaleResponse> products, SaleStatus status, decimal totalSaleValue, DateTime createdAt) => 
             new(id, customer, branchForSale, createdAt, numberSale, products, status, totalSaleValue);
+            
 }

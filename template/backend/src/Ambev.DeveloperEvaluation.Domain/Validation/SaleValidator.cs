@@ -18,8 +18,9 @@ public class SaleValidator : AbstractValidator<Sale>
             .MinimumLength(3).WithMessage("BranchForSale must be at least 3 characters long.")
             .MaximumLength(50).WithMessage("BranchForSale cannot be longer than 50 characters.");
 
-        // RuleFor(sale => sale.Products)
-        //     .ListCannotBeLessThanOrEqualToZero("The list cannot be less than or equal to 0.");
+        RuleFor(sale => sale.Products)
+            .NotEmpty()
+            .WithMessage("Products list cannot be empty.");
 
         RuleFor(sale => sale.Status)
             .NotEqual(SaleStatus.Unknown)

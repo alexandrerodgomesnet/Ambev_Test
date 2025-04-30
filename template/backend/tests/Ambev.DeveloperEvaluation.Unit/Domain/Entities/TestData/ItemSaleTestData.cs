@@ -6,15 +6,22 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData;
 public static class ItemSaleTestData
 {
     private static readonly Faker<ItemSale> ItemSaleFaker = new Faker<ItemSale>()
-        .RuleFor(u => u.Title, f => f.Internet.UserName())
-        .RuleFor(u => u.Quantity, f => f.Random.Number(1, 500))
-        .RuleFor(u => u.UnitPrice, f => f.Random.Decimal(1, 100));
+        .CustomInstantiator(i => 
+            ItemSale.Create(
+                i.Internet.UserName(),
+                i.Random.Number(1, 500),
+                i.Random.Decimal(1, 100)
+            )
+        );
+        // .RuleFor(u => u.Title, f => f.Internet.UserName())
+        // .RuleFor(u => u.Quantity, f => f.Random.Number(1, 500))
+        // .RuleFor(u => u.UnitPrice, f => f.Random.Decimal(1, 100));
 
     /// <summary>
     /// Generates a list of products.
     /// </summary>
     /// <returns>A valid list ItemSale entity with randomly generated data.</returns>
-    public static List<ItemSale> GenerateProducts() =>
+    public static ProductList GenerateProducts() =>
         [.. ItemSaleFaker.GenerateLazy(5)];
 
     /// <summary>

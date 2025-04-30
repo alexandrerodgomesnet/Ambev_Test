@@ -53,23 +53,55 @@ public static class SaleTestData
     /// This is useful for testing Customer length validation error cases.
     /// </summary>
     /// <returns>A Customer that exceeds the maximum length limit.</returns>
-    public static string GenerateInvalidCustomer() => new Faker().Internet.UserName();
+    public static string GenerateInvalidCustomer() => new Faker().Random.String2(51);
         
     /// <summary>
-    /// Generates an invalid product
-    /// The generated Product will:
-    /// - Cannot be null or empty.
-    /// This is useful for testing Product item quantity  validation error cases.
+    /// Generates an invalid product list
+    /// The generated Product list will:
+    /// - Be empty
+    /// This is useful for testing Product list validation error cases.
     /// </summary>
-    /// <returns>A null or empty list of product items.</returns>
-    public static IEnumerable<ItemSale> GenerateInvalidProducts() => [];
+    /// <returns>An empty list of product items.</returns>
+    public static ProductList GenerateInvalidProducts() => [];
 
     /// <summary>
     /// Generates an invalid status
     /// The generated status will:
-    /// - Cannot be Unknown.
-    /// This is useful for testing Status  validation error cases.
+    /// - Be Unknown
+    /// This is useful for testing Status validation error cases.
     /// </summary>
     /// <returns>An unknown status.</returns>
     public static SaleStatus GenerateInvalidStatus() => SaleStatus.Unknown;
+
+    /// <summary>
+    /// Generates a sale with invalid customer length
+    /// </summary>
+    public static Sale GenerateSaleWithInvalidCustomer() => 
+        SaleFaker.Clone()
+            .RuleFor(s => s.Customer, _ => GenerateInvalidCustomer())
+            .Generate();
+
+    /// <summary>
+    /// Generates a sale with invalid branch length
+    /// </summary>
+    public static Sale GenerateSaleWithInvalidBranch() => 
+        SaleFaker.Clone()
+            .RuleFor(s => s.BranchForSale, _ => GenerateInvalidBranchForSale())
+            .Generate();
+
+    /// <summary>
+    /// Generates a sale with invalid status
+    /// </summary>
+    public static Sale GenerateSaleWithInvalidStatus() => 
+        SaleFaker.Clone()
+            .RuleFor(s => s.Status, _ => GenerateInvalidStatus())
+            .Generate();
+
+    /// <summary>
+    /// Generates a sale with invalid products
+    /// </summary>
+    public static Sale GenerateSaleWithInvalidProducts() => 
+        SaleFaker.Clone()
+            .RuleFor(s => s.Products, _ => GenerateInvalidProducts())
+            .Generate();
 }

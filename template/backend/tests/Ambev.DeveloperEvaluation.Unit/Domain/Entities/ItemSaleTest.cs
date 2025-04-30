@@ -30,12 +30,9 @@ public class ItemSaleTest
     public void Given_Invalid_ItemSale_Data_When_Validated_Then_Should_Return_Invalid()
     {
         // Arrange
-        var itemSale = new ItemSale
-        {
-            Title = ItemSaleTestData.GenerateInvalidTitle(),
-            Quantity = ItemSaleTestData.GenerateInvalidQuantity(),
-            UnitPrice = ItemSaleTestData.GenerateInvalidUnitPrice()
-        };
+        var itemSale = ItemSale.Create(ItemSaleTestData.GenerateInvalidTitle(),
+        ItemSaleTestData.GenerateInvalidQuantity(),
+        ItemSaleTestData.GenerateInvalidUnitPrice());
 
         // Act
         //var result = itemSale.Validate();
